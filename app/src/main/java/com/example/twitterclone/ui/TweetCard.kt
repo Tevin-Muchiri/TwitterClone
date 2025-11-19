@@ -1,19 +1,30 @@
 package com.example.twitterclone.ui
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.twitterclone.model.Tweet
 
 @Composable
@@ -64,6 +75,101 @@ fun TweetCard(tweet: Tweet, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp
             )
+            
+            // Image thumbnail (if available)
+            tweet.imageUrl?.let { imageUrl ->
+                Spacer(modifier = Modifier.height(12.dp))
+                if (imageUrl.startsWith("content://") || imageUrl.startsWith("file://")) {
+                    // Real image from device (user-uploaded)
+                    androidx.compose.foundation.Image(
+                        painter = coil.compose.rememberAsyncImagePainter(imageUrl),
+                        contentDescription = "Tweet image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                    )
+                } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+                    // Image from URL
+                    androidx.compose.foundation.Image(
+                        painter = coil.compose.rememberAsyncImagePainter(imageUrl),
+                        contentDescription = "Tweet image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                    )
+                } else if (imageUrl != "placeholder") {
+                    // Image from drawable resources
+                    val context = androidx.compose.ui.platform.LocalContext.current
+                    val resourceId = context.resources.getIdentifier(
+                        imageUrl,
+                        "drawable",
+                        context.packageName
+                    )
+                    if (resourceId != 0) {
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(resourceId),
+                            contentDescription = "Tweet image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                        )
+                    } else {
+                        // Fallback to placeholder gradient
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0xFF667eea),
+                                            Color(0xFF764ba2)
+                                        )
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Image,
+                                contentDescription = "Tweet image",
+                                modifier = Modifier.size(64.dp),
+                                tint = Color.White.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                } else {
+                    // Placeholder gradient
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xFF667eea),
+                                        Color(0xFF764ba2)
+                                    )
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Image,
+                            contentDescription = "Tweet image",
+                            modifier = Modifier.size(64.dp),
+                            tint = Color.White.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+            }
             
             Spacer(modifier = Modifier.height(12.dp))
             

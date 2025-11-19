@@ -8,5 +8,6 @@ data class Tweet(
     val timestamp: String,
     val replies: Int,
     val reposts: Int,
-    val likes: Int
+    val likes: Int,
+    val imageUrl: String? = null
 )

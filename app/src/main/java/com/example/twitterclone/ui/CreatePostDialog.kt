@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun CreatePostDialog(
@@ -151,20 +150,45 @@ fun CreatePostDialog(
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(uri),
-                            contentDescription = "Selected image",
+                        // Placeholder for selected image
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(200.dp)
                                 .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0xFF4CAF50),
+                                            Color(0xFF2196F3)
+                                        )
+                                    )
+                                )
                                 .border(
                                     width = 2.dp,
                                     color = MaterialTheme.colorScheme.primary,
                                     shape = RoundedCornerShape(12.dp)
                                 ),
-                            contentScale = ContentScale.Crop
-                        )
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Image,
+                                    contentDescription = "Selected image",
+                                    modifier = Modifier.size(48.dp),
+                                    tint = Color.White.copy(alpha = 0.8f)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Image Selected",
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
                         
                         // Remove image button
                         IconButton(

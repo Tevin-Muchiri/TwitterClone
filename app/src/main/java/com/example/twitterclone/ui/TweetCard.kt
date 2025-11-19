@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
 import com.example.twitterclone.model.Tweet
 
 @Composable
@@ -79,29 +78,7 @@ fun TweetCard(tweet: Tweet, modifier: Modifier = Modifier) {
             // Image thumbnail (if available)
             tweet.imageUrl?.let { imageUrl ->
                 Spacer(modifier = Modifier.height(12.dp))
-                if (imageUrl.startsWith("content://") || imageUrl.startsWith("file://")) {
-                    // Real image from device (user-uploaded)
-                    androidx.compose.foundation.Image(
-                        painter = coil.compose.rememberAsyncImagePainter(imageUrl),
-                        contentDescription = "Tweet image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(12.dp)),
-                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                    )
-                } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
-                    // Image from URL
-                    androidx.compose.foundation.Image(
-                        painter = coil.compose.rememberAsyncImagePainter(imageUrl),
-                        contentDescription = "Tweet image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(12.dp)),
-                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                    )
-                } else if (imageUrl != "placeholder") {
+                if (imageUrl != "placeholder") {
                     // Image from drawable resources
                     val context = androidx.compose.ui.platform.LocalContext.current
                     val resourceId = context.resources.getIdentifier(
